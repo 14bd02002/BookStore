@@ -48,8 +48,16 @@ namespace BookStore2.Controllers
                     ivm.BookAuthorsList = ivm.BookAuthorsList.OrderBy(b => b.Book.BookName);
                     break;
             }
-
-
+            ViewBag.SortingAuthor = String.IsNullOrEmpty(Sorting_Order) ? "Author_Description" : "";
+            switch (Sorting_Order)
+            {
+                case "Author_Description":
+                    ivm.BookAuthorsList = ivm.BookAuthorsList.OrderByDescending(b => b.Author.AuthorName);
+                    break;
+                default:
+                    ivm.BookAuthorsList = ivm.BookAuthorsList.OrderBy(b => b.Author.AuthorName);
+                    break;
+            }
             return View(ivm);
             
 

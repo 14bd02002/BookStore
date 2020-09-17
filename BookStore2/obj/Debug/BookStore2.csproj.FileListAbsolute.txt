@@ -93,3 +93,4 @@ C:\Users\Dias\source\repos\BookStore2\BookStore2\obj\Debug\BookStore2.csproj.Cor
 C:\Users\Dias\source\repos\BookStore2\BookStore2\obj\Debug\BookStore2.csproj.CopyComplete
 C:\Users\Dias\source\repos\BookStore2\BookStore2\obj\Debug\BookStore2.dll
 C:\Users\Dias\source\repos\BookStore2\BookStore2\obj\Debug\BookStore2.pdb
+C:\Users\Dias\source\repos\BookStore2\BookStore2\obj\Debug\BookStore2.csprojAssemblyReference.cache
