@@ -242,6 +242,7 @@ namespace BookStore2.Controllers
                         PurchaseCodeIsUnique = true;
                         break;
                     }
+                    finalString = "";
                 }                     
                 
                 
