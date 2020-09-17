@@ -1,0 +1,36 @@
+﻿@model List<BookStore2.Models.Purchase>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-3"><a href="logOff">Выйти из аккаунта</a></div>
+        <div class="col-md-3">Ваш баланс равен: @ViewBag.Wallet</div>
+        <div class="col-md-3">@Html.ActionLink("Пополнить баланс", "AddMoney", "Account")</div>
+    </div>
+
+
+    <br />
+    <br />
+    if(ViewBag.Bool)
+    {
+
+        <table class="table table-hover">
+            <tr>
+                <td>Книга</td>
+                <td>Код</td>
+                <td>Время покупки</td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => item.Book.BookName)</td>
+                    <td>@Html.DisplayFor(m => item.PurchaseCode) </td>
+                    <td>@Html.DisplayFor(m => item.Time) </td>
+                </tr>
+            }
+        </table>
+
+    }
+
+
+}

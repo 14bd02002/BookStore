@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Author";
+}
+@model List<BookStore2.Models.BookAuthor>
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"><h3 style="">@Model[0].Author.AuthorName (@Model[0].Author.AuthorYear)</h3><img src="~/Images/Authors/@Model[0].Author.AuthorImageUrl" width="100%" height="100%"></div>
+    <div class="col-md-4">
+        @if (User.Identity.Name != null)
+        {
+            @Html.ActionLink("Редактировать", "EditAuthor", "Home", new {id = Model[0].Author.Id}, null)
+        }    
+    </div>
+</div>
+<div>
+    <h1>Cписок книг:</h1>
+    <div>
+        <table class="table table-hover">
+            @foreach (var item in Model)
+            {
+            <tr>                
+                <td>@Html.DisplayFor(m => item.Book.BookName)</td>
+            </tr>
+            }            
+        </table>
+        
+    </div>
+</div>

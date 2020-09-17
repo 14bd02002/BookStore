@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model List<BookStore2.Models.BookAuthor>
+
+<div id="index">
+    <table class="table table-hover">
+        <div id="results">
+            <div id="loading" style="display:none; color:Red; font-weight:bold;">
+                <p>Идет загрузка...</p>
+            </div>
+        </div>
+        @Scripts.Render("~/scripts/jquery-1.10.2.min.js")
+        @Scripts.Render("~/scripts/jquery-3.4.1.js")
+        @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
+        <tr>
+            <td></td>
+            <td><h3>@Html.ActionLink("Название", "Index", new { Sorting_Order = ViewBag.SortingName })</h3></td>
+            <td><h3>Автор</h3></td>
+            <td><h3>Цена</h3></td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></td>
+                <td>@Html.DisplayFor(m => item.Book.BookName)</td>
+                <td>
+                    <a href="/home/author/@item.Author.Id">@Html.DisplayFor(m => item.Author.AuthorName)</a>
+                </td>
+                <td>@Html.DisplayFor(m => item.Book.BookPrice)</td>
+                <td>@Html.ActionLink("Больше информации", "BookInfo", "Home", new { id = item.BookId }, null)</td>
+                <td>@Html.ActionLink("Купить", "BuyBook", "Home", new { id = item.BookId }, null)</td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="bestbook">
+    @Ajax.ActionLink("Самая популярная книга", "BestBook",
+            new AjaxOptions { UpdateTargetId = "bestbook" })
+</div>
+

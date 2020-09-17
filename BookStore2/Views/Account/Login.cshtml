@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+@model BookStore2.Models.LoginModel
+@if (!User.Identity.IsAuthenticated)
+{
+    <table>
+        <tr>
+            <td>Логин</td>
+            <td>Пароль</td>
+
+        </tr>
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <tr>
+                <td>
+                    @Html.EditorFor(m => m.Name)
+
+                </td>
+                <td>
+                    @Html.EditorFor(m => m.Password)
+                </td>
+                <td><input type="submit" value="Войти" /></td>
+
+            </tr>
+            @Html.ValidationMessageFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Password)
+        }
+
+
+    </table>
+
+    <p>Если нет аккаунта <a href="/account/register"> зарегистрируйтесь</a> </p>
+}
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <ul class="list-group">
+        <li class="list-group-item"><a href="logOff">Выйти из аккаунта</a></li>
+        <li class="list-group-item">Ваш баланс равен: @ViewBag.Wallet</li>
+        <li class="list-group-item">@Html.ActionLink("Пополнить баланс", "AddMoney", "Account");</li>
+    </ul>   
+    
+
+
+}

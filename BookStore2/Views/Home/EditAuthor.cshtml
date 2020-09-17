@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "EditAuthor";
+}
+@model BookStore2.Models.Author
+@using (Html.BeginForm("EditAuthor", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+<table class="table table-hover">
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.AuthorName);
+            @Html.EditorFor(m => m.AuthorName);
+            @Html.ValidationMessageFor(m => m.AuthorName);
+        </td>
+        <td>
+            @Html.LabelFor(m => m.AuthorYear);
+            @Html.EditorFor(m => m.AuthorYear);
+            @Html.ValidationMessageFor(m => m.AuthorYear);
+        </td>
+        <td>
+            <fieldset>
+                <legend>Image</legend>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.AuthorImageUrl)
+                </div>
+                <div class="editor-field">
+                    <input id="AuthorImageUrl" title="Upload a product image"
+                           type="file" name="file" />
+                </div>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <input class="btn" type="submit" />
+    </tr>
+</table>
+    
+
+}

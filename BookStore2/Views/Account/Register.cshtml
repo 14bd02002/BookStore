@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+}
+@model BookStore2.Models.RegisterModel
+<table>
+
+
+    <tr>
+        <td>Логин</td>
+        <td>Пароль</td>
+        <td>Возраст</td>
+
+    </tr>
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <tr>
+            <td>
+                @Html.EditorFor(m => m.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.Age)
+                @Html.ValidationMessageFor(model => model.Age)
+            </td>
+            <td><input type="submit" value="Войти" /></td>
+        </tr>
+    }
+
+
+</table>
+
+

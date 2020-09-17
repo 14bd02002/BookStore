@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+@model BookStore2.Models.User
+
+@using (Html.BeginForm("Addmoney", "Account", FormMethod.Post))
+{
+    <form>
+        <div class="form-group">
+            <label>Сумма</label>
+            <input type="text" class="form-control" id="Wallet" aria-describedby="Wallet" placeholder="Enter sum" name="Wallet">
+            
+        </div>
+        <button type="submit" class="btn btn-primary">Пополнить</button>
+    </form>
+
+}

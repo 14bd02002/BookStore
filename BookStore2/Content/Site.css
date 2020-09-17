@@ -1,0 +1,70 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: Verdana;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.SearchForm {
+    position: relative;
+    top: 10px;
+}
+
+.navbar-inverse {
+    background-color: Sienna;
+    color: black;
+}
+    .navbar-inverse .navbar-brand {
+        color: #FFF0F5;
+    }
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #FFF0F5;
+    }
+
+body {
+    background-image: url("images/background.jpg");
+}
+
+.body-content {
+    background-color: white;
+    height: 100%;
+    width: 60%;
+    margin: auto;
+}
+
+.bodyParent {
+    position: relative;
+    border: 1px solid black;
+}
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: Sienna;
+    color: white;
+    text-align: center;
+}
+a{
+    color: black;
+}

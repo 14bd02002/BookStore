@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "CreateAuthor";
+}
+
+@model BookStore2.Models.Author
+
+@using (Html.BeginForm("CreateAuthor", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+    <table class="table table-hover">        
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.AuthorName)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.AuthorName)
+                    @Html.ValidationMessageFor(m => m.AuthorName)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.AuthorYear)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.AuthorYear)
+                    @Html.ValidationMessageFor(m => m.AuthorYear)
+                </div>
+            </td>           
+            
+        </tr>
+        <tr>
+            
+            <td>
+                <fieldset>
+                    <legend>Image</legend>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AuthorImageUrl)
+                    </div>
+                    <div class="editor-field">
+                        <input id="AuthorImageUrl" title="Upload a product image"
+                               type="file" name="file" />
+                    </div>
+                </fieldset>
+            </td>
+            <td><input type="submit" value="создать" /></td>
+        </tr>
+    </table>
+
+
+
+}

@@ -1,0 +1,16 @@
+﻿@model BookStore2.Models.BuyBookModel
+
+<h2>Вы собираетесь купить книгу @Model.BuyBookName</h2>
+<h3>Стоимость данной книги равна @Model.BuyBookPrice</h3>
+<br />
+<h4>Ваш остаток на кошельке равен : @Model.BuyUserWallet</h4>
+
+@using (Html.BeginForm("BuyBook", "Home", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.BuyBookName)
+    @Html.HiddenFor(m => m.BuyBookPrice)
+    @Html.HiddenFor(m => m.BuyUserWallet)
+    @Html.HiddenFor(m => m.BuyUserName)
+    
+    <button type="submit" class="btn btn-secondary btn-lg">Купить</button>
+}

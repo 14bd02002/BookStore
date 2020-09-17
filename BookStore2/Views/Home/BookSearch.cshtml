@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "BookSearch";
+}
+@model IEnumerable<BookStore2.Models.Book>
+<div id="loading" style="display:none; color:Red; font-weight:bold;">
+    <p>Идет загрузка...</p>
+</div>
+<div id="searchresults">
+    <h3>Все книги автора: @Model.First().Author.AuthorName</h3>
+    <table>
+        <tr>
+            <td>Книга</td>
+            <td>Цена</td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.BookName</td>
+                <td>@item.BookPrice</td>
+            </tr>
+        }
+    </table>
+        
+    
+
+
+</div>
+
+    

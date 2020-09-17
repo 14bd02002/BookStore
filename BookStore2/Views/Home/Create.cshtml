@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+@model BookStore2.Models.Book
+
+@using (Html.BeginForm("Create", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+
+
+    <table class="table table-hover">
+        <tr>
+            <td>Книга</td>
+            <td>Цена</td>
+            <td>Автор</td>
+        </tr>
+        <tr>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.BookName)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.BookName)
+                    @Html.ValidationMessageFor(m => m.BookName)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.BookPrice)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.BookPrice)
+                    @Html.ValidationMessageFor(m => m.BookPrice)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Year)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.Year)
+                    @Html.ValidationMessageFor(m => m.Year)
+                </div>
+            </td>
+            <td>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Genre)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(m => m.Genre)
+                    @Html.ValidationMessageFor(m => m.Genre)
+                </div>
+            </td>            
+        </tr>
+        <tr>
+            <td>@Html.DropDownListFor(m => m.AuthorId, ViewBag.AuthorsList as SelectList)</td>
+            <td>
+                <fieldset>
+                    <legend>Image</legend>
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ImagePath)
+                    </div>
+                    <div class="editor-field">
+                        <input id="ImagePath" title="Upload a product image"
+                               type="file" name="file" />
+                    </div>                    
+                </fieldset>
+            </td>
+            <td><input type="submit" value="создать" /></td>
+        </tr>
+    </table>
+
+
+
+}

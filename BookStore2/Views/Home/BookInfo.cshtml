@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "BookInfo";
+}
+@model BookStore2.Models.Book
+
+
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"><h3 style="">@Model.BookName</h3><img src="~/Images/@Model.ImagePath" width="100%" height="100%"></div>
+    <div class="col-md-4"></div>
+</div>
+<br />
+<br />  
+<br />
+<table class="table table-bordered">
+    <tr>
+        <td>Автор</td>
+        <td>Жанр</td>
+        <td>Год</td>
+        <td>Купили</td>
+    </tr>
+    <tr>
+        <td>@Model.Author.AuthorName</td>
+        <td>@Model.Genre</td>
+        <td>@Model.Year</td>
+        <td>@Model.BoughtBooks</td>
+    </tr>
+</table>
