@@ -135,6 +135,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\PagingHelpers.cs" />
     <Compile Include="Migrations\202009061621346_Initial.cs" />
     <Compile Include="Migrations\202009061621346_Initial.designer.cs">
       <DependentUpon>202009061621346_Initial.cs</DependentUpon>
@@ -192,6 +193,7 @@
     <Compile Include="Models\BuyBookModel.cs" />
     <Compile Include="Models\LoginInfo.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Models\Purchase.cs" />
     <Compile Include="Models\SortState.cs" />
     <Compile Include="Models\User.cs" />

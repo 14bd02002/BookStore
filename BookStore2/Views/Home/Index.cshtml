@@ -1,9 +1,9 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-@model List<BookStore2.Models.BookAuthor>
-
-<div id="index">
+@model BookStore2.Models.IndexViewModel
+@using BookStore2.Helpers
+<div id="index" style="min-height:600px">
     <table class="table table-hover">
         <div id="results">
             <div id="loading" style="display:none; color:Red; font-weight:bold;">
@@ -19,7 +19,7 @@
             <td><h3>Автор</h3></td>
             <td><h3>Цена</h3></td>
         </tr>
-        @foreach (var item in Model)
+        @foreach (var item in Model.BookAuthorsList)
         {
             <tr>
                 <td><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></td>
@@ -32,7 +32,13 @@
                 <td>@Html.ActionLink("Купить", "BuyBook", "Home", new { id = item.BookId }, null)</td>
             </tr>
         }
+
     </table>
+
+    
+</div>
+<div class="btn-group">
+    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
 </div>
 <div id="bestbook">
     @Ajax.ActionLink("Самая популярная книга", "BestBook",

@@ -14,38 +14,44 @@ namespace BookStore2.Controllers
     {
         BookContext db = new BookContext();
 
-        public ActionResult Index(string Sorting_Order)
+        public ActionResult Index(string Sorting_Order, int page = 1)
         {
             //Проверка вошел ли пользователь через cookie SetAuthCookie ( FormsAuthentication.SetAuthCookie(model.Name, true); )
             if (User.Identity.IsAuthenticated)
             {
                 ViewBag.Name = User.Identity.Name;
             }
-            if (db.Authors.Count() == 0) 
-            {
-                db.Authors.Add(new Author { AuthorName = "Тургенев" });
-                db.Authors.Add(new Author { AuthorName = "Пушкин" });
-                db.Authors.Add(new Author { AuthorName = "Тютчев" });
-                db.SaveChanges();
-            }
-            
-            var IndexView = db.BookAuthors
-                .Include(p=>p.Book)
-                .Include(p=>p.Author);
+                        
+            //var IndexView = db.BookAuthors
+            //    .Include(p=>p.Book)
+            //    .Include(p=>p.Author);
+           
 
+            //Pagination
+            var books = db.BookAuthors
+                .Include(b=>b.Book)
+                .Include(b=>b.Author)
+                .ToList();
+            int pageSize = 5; 
+            IEnumerable<BookAuthor> booksPerPage = books.Skip((page - 1) * pageSize).Take(pageSize);
+            PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = books.Count };
+            IndexViewModel ivm = new IndexViewModel { PageInfo = pageInfo, BookAuthorsList = booksPerPage };
 
             //Sort
             ViewBag.SortingName = String.IsNullOrEmpty(Sorting_Order) ? "Name_Description" : "";
             switch (Sorting_Order)
             {
                 case "Name_Description":
-                    IndexView = IndexView.OrderByDescending(b => b.Book.BookName);
+                    ivm.BookAuthorsList = ivm.BookAuthorsList.OrderByDescending(b => b.Book.BookName);
                     break;
                 default:
-                    IndexView = IndexView.OrderBy(b => b.Book.BookName);
+                    ivm.BookAuthorsList = ivm.BookAuthorsList.OrderBy(b => b.Book.BookName);
                     break;
             }
-            return View(IndexView.ToList());
+
+
+            return View(ivm);
+            
 
         }
         public ActionResult BookInfo(int id)

@@ -2,12 +2,14 @@
     padding-top: 50px;
     padding-bottom: 20px;
     font-family: Verdana;
+    min-height:100%;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    min-height:900px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
