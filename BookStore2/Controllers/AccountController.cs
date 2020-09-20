@@ -25,9 +25,7 @@ namespace BookStore2.Controllers
             if (books != null)
                 ViewBag.Bool = true;
             if (books == null)
-                ViewBag.Bool = false;
-
-            //сортировка                        
+                ViewBag.Bool = false;                               
 
              return View(books);
         }

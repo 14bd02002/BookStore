@@ -133,7 +133,7 @@ namespace BookStore2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        [MyAuthorize(Roles = "dias")]
+        [MyAuthorize(Users = "dias")]
         public ActionResult CreateAuthor(Author author, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
@@ -158,12 +158,14 @@ namespace BookStore2.Controllers
             else
                 return View(author);
         }
+        [MyAuthorize(Users = "dias")]
         [HttpGet]
         public ActionResult EditAuthor(int id)
         {
             return View();
         }
         [HttpPost]
+         [MyAuthorize(Users = "dias")]
         public ActionResult EditAuthor(Author author, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
@@ -210,7 +212,7 @@ namespace BookStore2.Controllers
             {
                 var allBooks = db.Books
                 .Include(a => a.Author)
-                .Where(a => a.Author.AuthorName.Contains(name)).ToList(); // Where property contains some Characters from Value. ( Contains(name) );
+                .Where(a => a.BookName.Contains(name)).ToList(); 
                 if (allBooks.Count() <= 0)
                 {
                     return PartialView("FindError");
@@ -268,6 +270,13 @@ namespace BookStore2.Controllers
                 return RedirectToAction("Index", "Home");
             }            
             return View("NotEnoughMoney");
+        }
+        [MyAuthorize(Users = "dias")]
+        public ActionResult DeleteBook(int id)
+        {
+            db.Books.Remove(db.Books.Find(id));
+            db.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

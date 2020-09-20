@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "BookSearch";
 }
 @model IEnumerable<BookStore2.Models.Book>
@@ -7,23 +6,17 @@
     <p>Идет загрузка...</p>
 </div>
 <div id="searchresults">
-    <h3>Все книги автора: @Model.First().Author.AuthorName</h3>
-    <table>
-        <tr>
-            <td>Книга</td>
-            <td>Цена</td>
-        </tr>
+    <h3>Найдено @Model.Count(): </h3>
+    <table>        
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.BookName</td>
-                <td>@item.BookPrice</td>
+                <td>@Html.ActionLink(@item.BookName, "BookInfo", "Home", new { id = item.Id }, null )</td>                  
             </tr>
+           
+            
         }
     </table>
-        
-    
-
 
 </div>
 
