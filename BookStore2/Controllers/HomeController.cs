@@ -83,13 +83,15 @@ namespace BookStore2.Controllers
                     cmd2.Parameters.AddWithValue("@UserId", user.Id);
                     con.Open();                    
                     SqlDataReader rdr2 = cmd2.ExecuteReader();
+                    ViewBag.UserHasBook = 0;
                     while (rdr2.Read())
-                    {                       
-                        
+                    {
+
                         if (Convert.ToInt32(rdr2["BookId"]) == id && Convert.ToInt32(rdr2["UserId"]) == user.Id)
-                        {                            
-                            ViewBag.UserHasBook = user;
+                        {
+                            ViewBag.UserHasBook = 1;
                         }
+                        
 
                     }
                     con.Close();

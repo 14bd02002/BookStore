@@ -53,9 +53,12 @@
     <input id="UserHasBook" type="hidden" value="@ViewBag.UserHasBook" />
 }
 <script type="text/javascript">
-    if ($("#UserHasBook").val() != null) {
+    if ($("#UserHasBook").val() == 0) {
+        $("#slider").replaceWith("<h4>Чтобы поставить оценку надо приобрести данную книгу</h4>");
 
-        $("#slider").slider({
+    }
+    else {
+       $("#slider").slider({
             change: function (event, ui) {
                 var val = $("#slider").slider('value');
                 var book = new Object();
@@ -83,6 +86,5 @@
                 }
             }
         });
-
     }
 </script>
