@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link rel="stylesheet" href="~/Content/Site.css">
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -17,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Книжный магазин" , "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Книжный магазин", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -31,7 +34,7 @@
                         }, new { @class = "SearchForm" }))
 
                         {
-                            <input type="text" name="name" />
+                            <input type="text" name="name" id="searchInputBox" />
                             <input type="submit" value="Поиск" />
                         }
                     </li>
@@ -47,8 +50,6 @@
                         <li>@Html.ActionLink("Аккаунт", "Login", "Account")</li>
                     }
 
-
-
                 </ul>
             </div>
         </div>
@@ -63,8 +64,10 @@
         </div>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+    
     @Scripts.Render("~/bundles/bootstrap")
+
+    
     @RenderSection("scripts", required: false)
 </body>
 </html>

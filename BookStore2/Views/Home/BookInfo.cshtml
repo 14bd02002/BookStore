@@ -1,10 +1,7 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "BookInfo";
 }
 @model BookStore2.Models.Book
-
-
 <div id="results">
     <div id="loading" style="display:none; color:Red; font-weight:bold;">
         <p>Идет загрузка...</p>
@@ -16,7 +13,7 @@
     <div class="col-md-4"><a href="~/Home/DeleteBook/@Model.Id">Удалить</a></div>
 </div>
 <br />
-<br />  
+<br />
 <br />
 <table class="table table-bordered">
     <tr>
@@ -32,3 +29,60 @@
         <td>@Model.BoughtBooks</td>
     </tr>
 </table>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (ViewBag.BookLike != null && ViewBag.User.Id == ViewBag.CurrentBookLikeUserId)
+            {
+                <h2>Вы поставили оценку: @ViewBag.BookLike</h2>
+            }
+            else
+            {                
+                <h3>Поставьте оценку книге</h3>
+                <div id="slider"></div>
+            }
+        }
+    </div>
+    <div class="col-md-4"></div>
+</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <input id="UserId" type="hidden" value="@ViewBag.User.Id" />
+    <input id="UserHasBook" type="hidden" value="@ViewBag.UserHasBook" />
+}
+<script type="text/javascript">
+    if ($("#UserHasBook").val() != null) {
+
+        $("#slider").slider({
+            change: function (event, ui) {
+                var val = $("#slider").slider('value');
+                var book = new Object();
+                book.UserId = $("#UserId").val();
+                book.BookId = @Model.Id;
+                book.BookLikeValue = val;
+                $('h3').remove();
+                $('#slider').replaceWith("<h1>Вы поставили оценку: </h1>" + val);
+                if (book != null) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/BookInfo",
+                        data: book,
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        success: function (response) {
+                            if (response != null) {
+                                alert("Успешно");
+                            }
+                            else {
+                                alert("Не успешно")
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+</script>

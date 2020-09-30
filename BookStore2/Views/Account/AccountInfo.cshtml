@@ -23,7 +23,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@Html.DisplayFor(m => item.Book.BookName)</td>
+                    <td><a href="~/home/bookinfo/@item.Book.Id">@item.Book.BookName</a></td>
                     <td>@Html.DisplayFor(m => item.PurchaseCode) </td>
                     <td>@Html.DisplayFor(m => item.Time) </td>
                 </tr>

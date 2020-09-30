@@ -2,7 +2,10 @@
 using BookStore2.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -21,18 +24,18 @@ namespace BookStore2.Controllers
             {
                 ViewBag.Name = User.Identity.Name;
             }
-                        
+
             //var IndexView = db.BookAuthors
             //    .Include(p=>p.Book)
             //    .Include(p=>p.Author);
-           
+
 
             //Pagination
             var books = db.BookAuthors
-                .Include(b=>b.Book)
-                .Include(b=>b.Author)
+                .Include(b => b.Book)
+                .Include(b => b.Author)
                 .ToList();
-            int pageSize = 5; 
+            int pageSize = 5;
             IEnumerable<BookAuthor> booksPerPage = books.Skip((page - 1) * pageSize).Take(pageSize);
             PageInfo pageInfo = new PageInfo { PageNumber = page, PageSize = pageSize, TotalItems = books.Count };
             IndexViewModel ivm = new IndexViewModel { PageInfo = pageInfo, BookAuthorsList = booksPerPage };
@@ -59,21 +62,83 @@ namespace BookStore2.Controllers
                     break;
             }
             return View(ivm);
-            
+
 
         }
+        [HttpGet]
         public ActionResult BookInfo(int id)
         {
-            return View(db.Books
-                .Include(b=>b.Author)
+            if (User.Identity.IsAuthenticated)
+            {
+
+                var user = db.Users.First(u => u.Name == User.Identity.Name);
+                ViewBag.User = user;                
+                string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    //Проверяем книгу на наличие
+                    SqlCommand cmd2 = new SqlCommand("CheckUserHasBook", con);
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@BookId", id);
+                    cmd2.Parameters.AddWithValue("@UserId", user.Id);
+                    con.Open();                    
+                    SqlDataReader rdr2 = cmd2.ExecuteReader();
+                    while (rdr2.Read())
+                    {                       
+                        
+                        if (Convert.ToInt32(rdr2["BookId"]) == id && Convert.ToInt32(rdr2["UserId"]) == user.Id)
+                        {                            
+                            ViewBag.UserHasBook = user;
+                        }
+
+                    }
+                    con.Close();
+                    //Выборка Книги и лайка, если есть то передаем значение лайка для юзера
+                    SqlCommand cmd = new SqlCommand("SelectBookLikeByParameter", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@UserId", user.Id);
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        ViewBag.BookLike = Convert.ToInt32(rdr["BookLikeValue"]);
+                        ViewBag.CurrentBookLikeUserId = Convert.ToInt32(rdr["UserId"]);
+                    }
+                    con.Close();
+                }
+                return View(db.Books
+                .Include(b => b.Author)
                 .FirstOrDefault(b => b.Id == id));
+            }
+            return View(db.Books
+                .Include(b => b.Author)
+                .FirstOrDefault(b => b.Id == id));
+        }
+        [HttpPost]
+        public ActionResult BookInfo(BookUserLikes model)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("BookLikeProcedure", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserId", model.UserId);
+                cmd.Parameters.AddWithValue("@BookId", model.BookId);
+                cmd.Parameters.AddWithValue("@BookLikeValue", model.BookLikeValue);
+                cmd.ExecuteNonQuery();
+                con.Close();
+            
+            }
+            return RedirectToAction("BookInfo", "Home", new { id = model.BookId });
         }
         public ActionResult Author(int id)
         {
-            var something = db.BookAuthors                
+            var something = db.BookAuthors
                 .Where(p => p.Author.Id == id)
-                .Include(p=>p.Author)
-                .Include(p=>p.Book)
+                .Include(p => p.Author)
+                .Include(p => p.Book)
                 .ToList();
             return View(something);
         }
@@ -127,7 +192,7 @@ namespace BookStore2.Controllers
         [MyAuthorize(Users = "dias")]
         public ActionResult CreateAuthor()
         {
-            
+
             return View();
         }
         [HttpPost]
@@ -165,7 +230,7 @@ namespace BookStore2.Controllers
             return View();
         }
         [HttpPost]
-         [MyAuthorize(Users = "dias")]
+        [MyAuthorize(Users = "dias")]
         public ActionResult EditAuthor(Author author, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
@@ -191,54 +256,60 @@ namespace BookStore2.Controllers
                 int s = books.Count;
                 for (int i = 0; i < books.Count; i++)
                 {
-                    if(books[i].BoughtBooks >= x)
+                    if (books[i].BoughtBooks >= x)
                     {
                         x = books[i].BoughtBooks;
                     }
                 }
-                Book book = db.Books.FirstOrDefault(b=>b.BoughtBooks == x);
+                Book book = db.Books.FirstOrDefault(b => b.BoughtBooks == x);
                 return PartialView(book);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return PartialView(ex);
             }
-            
         }
         public ActionResult BookSearch(string name)
         {
-            
             if (!name.IsEmpty())
             {
                 var allBooks = db.Books
                 .Include(a => a.Author)
-                .Where(a => a.BookName.Contains(name)).ToList(); 
+                .Where(a => a.BookName.Contains(name)).ToList();
                 if (allBooks.Count() <= 0)
                 {
                     return PartialView("FindError");
                 }
-                
+
                 return PartialView(allBooks);
             }
             return PartialView("FindError");
         }
-        [HttpGet]       
+        [HttpGet]
+        [Authorize]
         public ActionResult BuyBook(int id)
-        {            
+        {
             Book book = db.Books.FirstOrDefault(b => b.Id == id);
             User user = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
-            
-            return View(new BuyBookModel() {BuyBookName = book.BookName , BuyBookPrice = book.BookPrice
-                , BuyUserName = user.Name, BuyUserWallet = user.Wallet });
+
+            return View(new BuyBookModel()
+            {
+                BuyBookName = book.BookName,
+                BuyBookPrice = book.BookPrice
+                ,
+                BuyUserName = user.Name,
+                BuyUserWallet = user.Wallet
+            });
         }
         [HttpPost]
         public ActionResult BuyBook(BuyBookModel BBModel)
-        {            
+        {
             User user = db.Users.FirstOrDefault(u => u.Name == BBModel.BuyUserName);
             Book book = db.Books.FirstOrDefault(u => u.BookName == BBModel.BuyBookName);
             //Добавляем обьект покупки
-            
-            if (user.Wallet>=book.BookPrice) {
+
+            if (user.Wallet >= book.BookPrice)
+            {
                 //Проверка айди покупки на уникальность
                 var checkPurchaseCodes = db.Purchases.Select(p => p.PurchaseCode).ToList();
                 var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -252,23 +323,23 @@ namespace BookStore2.Controllers
                     {
                         stringChars[i] = chars[rnd.Next(0, chars.Length)];
                         finalString += stringChars[i];
-                    }                    
-                    if (db.Purchases.FirstOrDefault(p=>p.PurchaseCode == finalString) == null)
+                    }
+                    if (db.Purchases.FirstOrDefault(p => p.PurchaseCode == finalString) == null)
                     {
                         PurchaseCodeIsUnique = true;
                         break;
                     }
                     finalString = "";
-                }                     
-                
-                
+                }
+
+
                 db.Purchases.Add(new Purchase() { PurchaseCode = finalString, Book = book, User = user, Time = DateTime.Now });
                 //Создаем коллекцию из обьектов книг, и присваем эту коллекцию к свойству Books            
                 user.Wallet = user.Wallet - book.BookPrice;
                 book.BoughtBooks++;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
-            }            
+            }
             return View("NotEnoughMoney");
         }
         [MyAuthorize(Users = "dias")]

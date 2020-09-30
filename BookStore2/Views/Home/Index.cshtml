@@ -4,14 +4,13 @@
 @model BookStore2.Models.IndexViewModel
 @using BookStore2.Helpers
 <div id="index" style="min-height:600px">
-    <table class="table table-hover">
-        <div id="results">
-            <div id="loading" style="display:none; color:Red; font-weight:bold;">
-                <p>Идет загрузка...</p>
-            </div>
+    <div id="results">
+        <div id="loading" style="display:none; color:Red; font-weight:bold;">
+            <p>Идет загрузка...</p>
         </div>
-        @Scripts.Render("~/scripts/jquery-1.10.2.min.js")
-        @Scripts.Render("~/scripts/jquery-3.4.1.js")
+    </div>
+    <table class="table table-hover">
+      
         @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
         <tr>
             <td></td>
@@ -22,20 +21,18 @@
         @foreach (var item in Model.BookAuthorsList)
         {
             <tr>
-                <td><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></td>
+                <td><a href="~/Home/BookInfo/@item.BookId"><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></a></td>
                 <td>@Html.DisplayFor(m => item.Book.BookName)</td>
                 <td>
                     <a href="/home/author/@item.Author.Id">@Html.DisplayFor(m => item.Author.AuthorName)</a>
                 </td>
                 <td>@Html.DisplayFor(m => item.Book.BookPrice)</td>
-                <td>@Html.ActionLink("Больше информации", "BookInfo", "Home", new { id = item.BookId }, null)</td>
                 <td>@Html.ActionLink("Купить", "BuyBook", "Home", new { id = item.BookId }, null)</td>
             </tr>
         }
 
     </table>
 
-    
 </div>
 <div class="btn-group">
     @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
