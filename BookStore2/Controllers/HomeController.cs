@@ -123,14 +123,49 @@ namespace BookStore2.Controllers
             string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
             using (SqlConnection con = new SqlConnection(cs))
             {
+
+
                 con.Open();
-                SqlCommand cmd = new SqlCommand("BookLikeProcedure", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@UserId", model.UserId);
-                cmd.Parameters.AddWithValue("@BookId", model.BookId);
-                cmd.Parameters.AddWithValue("@BookLikeValue", model.BookLikeValue);
-                cmd.ExecuteNonQuery();
+
+                //Если есть оценка то изменим ее            
+                bool UserLikeBookBool = false;
+                SqlCommand CheckUserLiked = new SqlCommand("CheckUserLikedBook", con);
+                CheckUserLiked.CommandType = CommandType.StoredProcedure;
+                CheckUserLiked.Parameters.AddWithValue("@UserId", model.UserId);
+                CheckUserLiked.Parameters.AddWithValue("@BookId", model.BookId);
+                SqlDataReader rdr = CheckUserLiked.ExecuteReader();
+                while (rdr.Read())
+                {
+                    if (Convert.ToInt32(rdr["UserId"]) == model.UserId && Convert.ToInt32(rdr["BookId"]) == model.BookId)
+                    {
+                        UserLikeBookBool = true;
+                    }
+                }
                 con.Close();
+                if (!UserLikeBookBool)
+                {
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand("BookLikeProcedure", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@UserId", model.UserId);
+                    cmd.Parameters.AddWithValue("@BookId", model.BookId);
+                    cmd.Parameters.AddWithValue("@BookLikeValue", model.BookLikeValue);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+                else
+                {
+                    con.Open();
+                    SqlCommand UpdateLikeValue = new SqlCommand("UpdateLikeValueProcedure", con);
+                    UpdateLikeValue.CommandType = CommandType.StoredProcedure;
+                    UpdateLikeValue.Parameters.AddWithValue("@UserId", model.UserId);
+                    UpdateLikeValue.Parameters.AddWithValue("@BookId", model.BookId);
+                    UpdateLikeValue.Parameters.AddWithValue("@UserLikeValue", model.BookLikeValue);
+                    UpdateLikeValue.ExecuteNonQuery();
+                    con.Close();
+                }
+                //Добавление оценки если ее нет
+               
             
             }
             return RedirectToAction("BookInfo", "Home", new { id = model.BookId });
