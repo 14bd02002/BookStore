@@ -1,5 +1,6 @@
 ﻿using BookStore2.Filters;
 using BookStore2.Models;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -68,12 +69,13 @@ namespace BookStore2.Controllers
         [HttpGet]
         public ActionResult BookInfo(int id)
         {
+            string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
             if (User.Identity.IsAuthenticated)
             {
 
                 var user = db.Users.First(u => u.Name == User.Identity.Name);
-                ViewBag.User = user;                
-                string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
+                ViewBag.User = user;
+                //string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString;
                 using (SqlConnection con = new SqlConnection(cs))
                 {
                     //Проверяем книгу на наличие
@@ -81,7 +83,7 @@ namespace BookStore2.Controllers
                     cmd2.CommandType = CommandType.StoredProcedure;
                     cmd2.Parameters.AddWithValue("@BookId", id);
                     cmd2.Parameters.AddWithValue("@UserId", user.Id);
-                    con.Open();                    
+                    con.Open();
                     SqlDataReader rdr2 = cmd2.ExecuteReader();
                     ViewBag.UserHasBook = 0;
                     while (rdr2.Read())
@@ -91,7 +93,7 @@ namespace BookStore2.Controllers
                         {
                             ViewBag.UserHasBook = 1;
                         }
-                        
+
 
                     }
                     con.Close();
@@ -108,14 +110,33 @@ namespace BookStore2.Controllers
                         ViewBag.CurrentBookLikeUserId = Convert.ToInt32(rdr["UserId"]);
                     }
                     con.Close();
+
+                    //Вывод всех оценок по книге
+                    SqlCommand VoteAverage = new SqlCommand("AvgBookVote", con);
+                    VoteAverage.CommandType = CommandType.StoredProcedure;                    
+                    VoteAverage.Parameters.AddWithValue("@BookId", id);                    
+                    con.Open();
+                    SqlDataReader reader = VoteAverage.ExecuteReader();
+                    while (reader.Read())
+                    {                        
+                        if (reader["BookLikeValue"].GetType().Name != "DBNull")
+                        {
+                            int x = Convert.ToInt32(reader["BookLikeValue"]);
+                            ViewBag.AvgBookVote = x;
+                        }
+                           
+                    }
+                       
+                    con.Close();
                 }
                 return View(db.Books
                 .Include(b => b.Author)
                 .FirstOrDefault(b => b.Id == id));
             }
+
             return View(db.Books
-                .Include(b => b.Author)
-                .FirstOrDefault(b => b.Id == id));
+              .Include(b => b.Author)
+              .FirstOrDefault(b => b.Id == id));
         }
         [HttpPost]
         public ActionResult BookInfo(BookUserLikes model)
@@ -165,8 +186,8 @@ namespace BookStore2.Controllers
                     con.Close();
                 }
                 //Добавление оценки если ее нет
-               
-            
+
+
             }
             return RedirectToAction("BookInfo", "Home", new { id = model.BookId });
         }

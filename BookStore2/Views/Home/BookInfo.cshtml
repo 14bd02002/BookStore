@@ -21,12 +21,21 @@
         <td>Жанр</td>
         <td>Год</td>
         <td>Купили</td>
+        <td>Средняя оценка</td>
     </tr>
     <tr>
         <td>@Model.Author.AuthorName</td>
         <td>@Model.Genre</td>
         <td>@Model.Year</td>
         <td>@Model.BoughtBooks</td>
+        
+            @if (ViewBag.AvgBookVote != null)
+            {
+            <td>@ViewBag.AvgBookVote из 100</td>
+            }
+            else
+            {<td>Еще нет оценок</td>}
+       
     </tr>
 </table>
 <div class="row">
