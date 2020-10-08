@@ -9,8 +9,14 @@
             <p>Идет загрузка...</p>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-8" style="border:solid; background-color:wheat; padding-bottom: 20px; padding-left: 40px">
+            <h3 style="font-size:18px">Jquery Autocomplete</h3>
+            <input type="text" name="name" id="searchInput" class="form-control" />
+        </div>
+    </div>
     <table class="table table-hover">
-      
+
         @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
         <tr>
             <td></td>
@@ -41,4 +47,36 @@
     @Ajax.ActionLink("Самая популярная книга", "BestBook",
             new AjaxOptions { UpdateTargetId = "bestbook" })
 </div>
+
+
+
+<script>
+    function onItemSelect(item)
+    {
+        var siteRootUrl = '@Url.Content("~/")';
+        window.location.href = siteRootUrl + 'Home/BookInfo/' + item;
+    }
+
+    $("#searchInput").autocomplete({
+        source: function (request, respone) {
+            $.ajax({
+                url: "@Url.Action("AutoComplete", "Home")",
+                datatype: "json",
+                data: { name: $("#searchInput").val() },
+                success: function (data) {
+                    respone($.map(data, function (item) {
+                        return {label:item.BookName, value: item.BookName, id: item.Id}
+                    }))
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            })
+        },
+        select: function (event, ui) {
+            onItemSelect(ui.item.id);
+        }
+
+    })
+</script>
 
