@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+@model BookStore2.Models.User
+
+
+@Html.ValidationSummary(true)
+<div class="row" style="height:30px">
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="/Account/Edit">
+            @Html.AntiForgeryToken()
+            <table>
+                <tr>
+                    <td><label>Имя</label></td>
+                    <td><input type="text" name="FirstName" value="" /></td>
+                </tr>
+                <tr>
+                    <td><label>Фамилия</label></td>
+                    <td><input type="text" name="LastName" value="" /></td>
+                </tr>
+                <tr>
+                    <td><label>Год рождения</label></td>
+                    <td><input type="text" name="DateOfBirth" value="" /></td>
+                </tr>
+                <tr>
+                    <td><label>Пароль</label></td>
+                    <td><input type="text" name="Password" value="" /></td>
+
+                </tr>
+                <tr>
+                    <td><button type="submit">Изменить</button></td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+    <div class="col-md-6"><h3>Введите свои данные</h3></div>
+</div>

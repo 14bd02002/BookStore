@@ -99,5 +99,16 @@ namespace BookStore2.Controllers
 
             return RedirectToAction("Index", "");
         }
+        [HttpGet] 
+        public ActionResult Edit()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(User user)
+        {
+            return RedirectToAction("AccountInfo", "Account");
+        }
     }
 }

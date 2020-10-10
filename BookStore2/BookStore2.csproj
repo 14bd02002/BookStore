@@ -301,6 +301,7 @@
     <Content Include="Views\Home\NotEnoughMoney.cshtml" />
     <Content Include="Views\Home\CreateAuthor.cshtml" />
     <Content Include="Views\Home\EditAuthor.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
