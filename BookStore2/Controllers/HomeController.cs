@@ -308,7 +308,6 @@ namespace BookStore2.Controllers
         {
             try
             {
-
                 List<Book> books = db.Books.ToList();
                 int x = 0;
                 int s = books.Count;

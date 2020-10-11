@@ -1,6 +1,9 @@
 ﻿using BookStore2.Models;
 using System;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -99,15 +102,53 @@ namespace BookStore2.Controllers
 
             return RedirectToAction("Index", "");
         }
-        [HttpGet] 
+        [HttpGet]       
+
         public ActionResult Edit()
         {
-            return View();
+            var id = db.Users
+                .Where(u => u.Name == User.Identity.Name)
+                .Select(u => u.Id).ToList().First();
+            var currentUser = db.Users.Find(id);
+            if(currentUser.FirstName != null && currentUser.LastName != null && currentUser.DateOfBirth != null)
+            {
+
+                var date = currentUser.DateOfBirth.Date;
+                db.SaveChanges();
+                ViewBag.UserHasName = true;
+            }
+            else
+            {
+                ViewBag.UserHasName = false;
+            }
+
+            return View(currentUser);
         }
-        [HttpPost]
+        [HttpPost]     
         [ValidateAntiForgeryToken]
         public ActionResult Edit(User user)
         {
+            //добавляем id 
+            var id = db.Users
+                .Where(u => u.Name == User.Identity.Name)
+                .Select(u => u.Id).ToList().First();
+            user.Id = id;
+
+            string cs = ConfigurationManager.ConnectionStrings["BookContext"].ConnectionString; // Записал в cs коннекшн стринг
+            using (SqlConnection sql = new SqlConnection(cs))  // создаю sql коннекшн в using чтобы потом оборвать связь/ и передаю cs в конструктор
+            {
+                SqlCommand cmd = new SqlCommand("EditUserProcedure", sql);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserId", user.Id);
+                cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                cmd.Parameters.AddWithValue("@DateOfBirth", user.DateOfBirth);
+                cmd.Parameters.AddWithValue("@Password", user.Password);                
+                sql.Open();
+                cmd.ExecuteNonQuery();
+                sql.Close();
+            }
+
             return RedirectToAction("AccountInfo", "Account");
         }
     }

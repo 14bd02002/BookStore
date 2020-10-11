@@ -1,41 +1,41 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Edit";
 }
 @model BookStore2.Models.User
 
-
-@Html.ValidationSummary(true)
 <div class="row" style="height:30px">
 </div>
 <div class="row">
     <div class="col-md-6">
         <form method="post" action="/Account/Edit">
             @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
             <table>
                 <tr>
                     <td><label>Имя</label></td>
-                    <td><input type="text" name="FirstName" value="" /></td>
+                    <td><input type="text" name="FirstName" value="@if(ViewBag.UserHasName){@Model.FirstName}"  required/></td>
                 </tr>
                 <tr>
                     <td><label>Фамилия</label></td>
-                    <td><input type="text" name="LastName" value="" /></td>
+                    <td><input type="text" name="LastName" value="@if(ViewBag.UserHasName){@Model.LastName}" required /></td>
                 </tr>
                 <tr>
                     <td><label>Год рождения</label></td>
-                    <td><input type="text" name="DateOfBirth" value="" /></td>
+                    <td><input type="datetime" name="DateOfBirth" value="@if(ViewBag.UserHasName){@Model.DateOfBirth.Date.ToString("d")}" id="datepicker"  required/></td>
                 </tr>
                 <tr>
                     <td><label>Пароль</label></td>
-                    <td><input type="text" name="Password" value="" /></td>
+                    <td><input type="password" name="Password" value="@Model.Password" /></td>
 
                 </tr>
                 <tr>
                     <td><button type="submit">Изменить</button></td>
                 </tr>
             </table>
-
         </form>
     </div>
     <div class="col-md-6"><h3>Введите свои данные</h3></div>
 </div>
+<script>
+    $("#datepicker").kendoDatePicker();
+</script>

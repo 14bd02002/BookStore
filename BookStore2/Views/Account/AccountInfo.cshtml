@@ -1,5 +1,4 @@
 ﻿@model List<BookStore2.Models.Purchase>
-
 @if (User.Identity.IsAuthenticated)
 {
     <div class="row">
@@ -8,8 +7,6 @@
         <div class="col-md-3">@Html.ActionLink("Пополнить баланс", "AddMoney", "Account")</div>
         <div class="col-md-3"><a href="~/Account/Edit">Изменить свои данные</a></div>
     </div>
-
-
     <br />
     <br />
     if(ViewBag.Bool)
@@ -32,6 +29,4 @@
         </table>
 
     }
-
-
 }
