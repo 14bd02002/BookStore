@@ -31,17 +31,10 @@
                 <ul class="nav navbar-nav">
 
                     <li>
-                        @using (Ajax.BeginForm("BookSearch", "Home", new AjaxOptions
-                        {
-                            UpdateTargetId = "results",
-                            LoadingElementId = "loading",
-                            LoadingElementDuration = 1000
-                        }, new { @class = "SearchForm" }))
-
-                        {
+                        <form class="SearchForm">
                             <input type="text" name="name" id="searchInputBox" />
-                            <input type="submit" value="Поиск" />
-                        }
+                            <input type="submit" value="Поиск" id="submitSearch" />
+                        </form>                      
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -49,7 +42,6 @@
                         <li>@Html.ActionLink("Добавить Автора", "CreateAuthor", "Home")</li>
                         <li>@Html.ActionLink(@User.Identity.Name, "AccountInfo", "Account")</li>
                     }
-
                     @if (!User.Identity.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Аккаунт", "Login", "Account")</li>
@@ -63,6 +55,24 @@
         <div class="container body-content">
             @RenderBody()
             <hr />
+            <script>
+                $("#submitSearch").click(function () {
+                    event.preventDefault();
+                    var name = $("#searchInputBox").val();
+                    $.ajax({
+                        url: "/Home/BookSearch",
+                        method: "GET",
+                        data: JSON,
+                        data: { "name": $("#searchInputBox").val() },
+                        success: function (response) {    
+                            $("#results").html(response);
+                            
+
+                            
+                        }
+                    })
+                })
+            </script>
             <footer>
                 <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
             </footer>

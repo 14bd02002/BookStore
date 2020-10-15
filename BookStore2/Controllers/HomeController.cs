@@ -326,6 +326,7 @@ namespace BookStore2.Controllers
                 return PartialView(ex);
             }
         }
+        [HttpGet]
         public ActionResult BookSearch(string name)
         {
             if (!name.IsEmpty())
