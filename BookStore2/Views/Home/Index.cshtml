@@ -3,39 +3,56 @@
 }
 @model BookStore2.Models.IndexViewModel
 @using BookStore2.Helpers
-<div id="index" style="min-height:600px">
-    <div id="results">
-        
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-8" style="border:solid; background-color:wheat; padding-bottom: 20px; padding-left: 40px">
+<div id="index" style="min-height:600px; margin-left:5px; margin-right:5px" class="row" >
+    
+    <div class="row" style=" margin-left:5px; margin-right:5px ">
+        <div class="col-md-8" id="results">
+
+        </div>
+        <div class="col-md-4" style="border:solid; background-color:wheat; padding-bottom: 20px ">
             <h3 style="font-size:18px">Jquery Autocomplete</h3>
             <input type="text" name="name" id="searchInput" class="form-control" />
         </div>
     </div>
-    <table class="table table-hover">
+    
+    <div class="col-md-8">        
+        <table class="table table-hover">
 
-        @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
-        <tr>
-            <td></td>
-            <td><h3>@Html.ActionLink("Название", "Index", new { Sorting_Order = ViewBag.SortingName })</h3></td>
-            <td><h3>@Html.ActionLink("Автор", "Index", new { Sorting_Order = ViewBag.SortingAuthor })</h3></td>
-            <td><h3>Цена</h3></td>
-        </tr>
-        @foreach (var item in Model.BookAuthorsList)
-        {
+            @Scripts.Render("~/scripts/jquery.unobtrusive-ajax.min.js")
             <tr>
-                <td><a href="~/Home/BookInfo/@item.BookId"><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></a></td>
-                <td>@Html.DisplayFor(m => item.Book.BookName)</td>
-                <td>
-                    <a href="/home/author/@item.Author.Id">@Html.DisplayFor(m => item.Author.AuthorName)</a>
-                </td>
-                <td>@Html.DisplayFor(m => item.Book.BookPrice)</td>
-                <td>@Html.ActionLink("Купить", "BuyBook", "Home", new { id = item.BookId }, null)</td>
+                <td></td>
+                <td><h3>@Html.ActionLink("Название", "Index", new { Sorting_Order = ViewBag.SortingName })</h3></td>
+                <td><h3>@Html.ActionLink("Автор", "Index", new { Sorting_Order = ViewBag.SortingAuthor })</h3></td>
+                <td><h3>Цена</h3></td>
             </tr>
-        }
+            @foreach (var item in Model.BookAuthorsList)
+            {
+                <tr>
+                    <td><a href="~/Home/BookInfo/@item.BookId"><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="100px" height="100px" /></a></td>
+                    <td>@Html.DisplayFor(m => item.Book.BookName)</td>
+                    <td>
+                        <a href="/home/author/@item.Author.Id">@Html.DisplayFor(m => item.Author.AuthorName)</a>
+                    </td>
+                    <td>@Html.DisplayFor(m => item.Book.BookPrice)</td>
+                    <td>@Html.ActionLink("Купить", "BuyBook", "Home", new { id = item.BookId }, null)</td>
+                </tr>
+            }
 
-    </table>
+        </table>
+    </div>
+    <div class="col-md-4" id="NewsBlock" style="max-height:300px; overflow-y:scroll">       
+        <h3>Новостной блок</h3>
+        <div>
+            @foreach (var item in Model.BookAuthorsList)
+            {
+                <div class="row" style="padding-top: 30px">
+                    <a href="~/Home/BookInfo/@item.BookId"><img src="~/Images/@item.Book.ImagePath" alt="@item.Book.BookName" width="20px" height="20px" /></a>
+                    <h3>@item.Book.BookName</h3>
+                </div>
+            }
+        </div>
+
+    </div>
 
 </div>
 <div class="btn-group">
@@ -76,5 +93,7 @@
         }
 
     })
+
+    $("#NewsBlock").accordion({ collapsible: true});
 </script>
 
