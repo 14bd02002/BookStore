@@ -407,7 +407,7 @@ namespace BookStore2.Controllers
             db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
-        public JsonResult AutoComplete(string name)
+        public ActionResult AutoComplete(string name)
         {
             var books = db.Books.Where(b => b.BookName.Contains(name));
             return Json(books, JsonRequestBehavior.AllowGet);
